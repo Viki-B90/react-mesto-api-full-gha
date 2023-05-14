@@ -1,0 +1,17 @@
+.profile__user {
+  display: flex;
+  flex-direction: column;
+  max-width: 336px;
+}
+
+@media screen and (max-width: 613px) {
+  .profile__user {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 321px) {
+  .profile__user {
+    max-width: 282px;
+  }
+}

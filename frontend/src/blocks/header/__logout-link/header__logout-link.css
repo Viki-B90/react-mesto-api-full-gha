@@ -1,0 +1,11 @@
+.header__logout-link {
+  padding: 0;
+  color: #a9a9a9;
+  font-size: 18px;
+  line-height: 22px;
+  margin-left: 24px;
+  background-color: #000;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}

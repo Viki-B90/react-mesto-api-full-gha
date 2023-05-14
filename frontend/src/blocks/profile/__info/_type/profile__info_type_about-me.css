@@ -1,0 +1,16 @@
+.profile__info_type_about-me {
+  font-style: regular;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  margin: 10px 0 0 30px;
+}
+
+@media screen and (max-width: 613px) {
+  .profile__info_type_about-me {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 17px;
+    width: 189px;
+  }
+}

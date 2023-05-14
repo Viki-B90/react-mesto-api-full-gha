@@ -1,0 +1,11 @@
+.element {
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 282px;
+  min-height: 361px;
+  position: relative;
+}

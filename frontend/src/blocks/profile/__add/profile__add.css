@@ -1,0 +1,34 @@
+.profile__add {
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  margin: 35px 0 0 0;
+  padding: 0;
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  max-width: 394px;
+}
+
+.profile__add:hover {
+  opacity: .6;
+}
+
+@media screen and (max-width: 1164px) {
+  .profile__add {
+    margin-left: 0;
+    margin-right: 40px;
+  }
+}
+
+@media screen and (max-width: 948px) {
+  .profile__add {
+    margin-left: 100px;
+  }
+}
+
+@media screen and (max-width: 613px) {
+  .profile__add {
+    width: 282px;
+    margin: 33px auto;
+  }
+}

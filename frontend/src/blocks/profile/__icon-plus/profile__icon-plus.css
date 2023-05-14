@@ -1,0 +1,14 @@
+.profile__icon-plus {
+  background-size: 22px;
+  padding: 12px 62px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media screen and (max-width: 613px) {
+  .profile__icon-plus {
+    background-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}

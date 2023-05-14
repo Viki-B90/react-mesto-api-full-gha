@@ -1,0 +1,15 @@
+.profile__icon-pencil {
+  background-size: 10px;
+  padding: 6px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media screen and (max-width: 613px) {
+  .profile__icon-pencil {
+    background-size: 7.5px;
+    width: 7.5px;
+    height: 7.5px;
+    padding: 4.25px;
+  }
+}

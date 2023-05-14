@@ -1,0 +1,6 @@
+.popup__icon-notify {
+  display: flex;
+  margin: 60px auto 0;
+  width: 120px;
+  max-height: 120px;
+}

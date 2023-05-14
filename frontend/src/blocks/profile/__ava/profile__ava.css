@@ -1,0 +1,14 @@
+.profile__ava {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 613px) {
+  .profile__ava {
+    display: flex;
+    justify-self: center;
+  }
+}
