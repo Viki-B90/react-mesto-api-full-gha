@@ -61,7 +61,7 @@ function App() {
           image: reportSuccess,
           text: 'Вы успешно зарегистрировались!'
         });
-        navigate("/signin");
+        navigate('/signin');
       })
       .catch(() => {
         setStatus({
@@ -76,7 +76,7 @@ function App() {
     setLoggedIn(false);
     localStorage.removeItem('jwt');
     setEmail(null);
-    navigate("/signin");
+    navigate('/signin');
   };
 
   function handleInfoTooltip() {
@@ -91,14 +91,14 @@ function App() {
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
-            navigate("/");
+            navigate('/');
           }
         })
         .catch((err) => {
           console.error(`Ошибка: ${err}`);
         });
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (loggedIn) {

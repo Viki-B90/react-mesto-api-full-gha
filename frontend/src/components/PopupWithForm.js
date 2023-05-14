@@ -10,7 +10,7 @@ function PopupWithForm({ name, title, isOpen, onClose, onCloseEsc, onCloseOverla
       document.removeEventListener('keydown', onCloseEsc);
       document.removeEventListener('click', onCloseOverlay);
     }
-  }, [isOpen])
+  }, [isOpen, onCloseEsc, onCloseOverlay])
 
   return (
     <section className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`} >
