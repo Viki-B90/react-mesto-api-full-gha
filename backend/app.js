@@ -26,8 +26,9 @@ app.use(helmet());
 app.use(limiter);
 app.use(cors());
 app.use(cookieParser());
-app.use(requestLogger);
 // app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -37,9 +38,9 @@ app.get('/crash-test', () => {
 
 app.use(allRouters);
 
+app.use(errorLogger);
 app.use(errors());
 app.use(handleError);
-app.use(errorLogger);
 
 app.listen(PORT, () => {
   console.log(`Приложение слушает порт ${PORT}`)
