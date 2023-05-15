@@ -5,7 +5,7 @@ const checkResponse = (res) => {
     return Promise.reject (`Ошибка: ${res.status}`);
 }
 
-const BASE_URL = 'https://auth.nomoreparties.co';
+const BASE_URL = 'https://api.domainname.stud.viki.nomoredomains.monster';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
