@@ -38,6 +38,7 @@ function App() {
   const navigate = useNavigate();
 
   function handleLogin(email, password) {
+    console.log(document.cookie)
     authorize(email, password)
       .then((res) => {
         localStorage.setItem('jwt', res.token);

@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+
+// eslint-disable-next-line no-unused-vars
+const validator = require('validator');
+
 const { regex } = require('../utils/regex');
 
 const cardSchema = new mongoose.Schema({

@@ -24,7 +24,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(limiter);
-app.use(cors());
+
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+    allowedHeaders: ['Content-type', 'Authorization'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  }),
+);
+
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 

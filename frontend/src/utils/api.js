@@ -15,6 +15,7 @@ class Api {
     getUserProfile() {
       return fetch(`${this._baseUrl}/users/me`, {
         method: 'GET',
+        credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
@@ -24,6 +25,7 @@ class Api {
     setUserProfile(data) {
       return fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: this._headers,
         body: JSON.stringify({
           name: data.name,
@@ -37,6 +39,7 @@ class Api {
     changeUserAvatar(data) {
       return fetch(`${this._baseUrl}/users/me/avatar`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: this._headers,
         body: JSON.stringify({
           avatar: data.avatar,
@@ -49,6 +52,7 @@ class Api {
     getInitialCards() {
       return fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
+        credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
@@ -58,6 +62,7 @@ class Api {
     addNewCard(data) {
       return fetch(`${this._baseUrl}/cards`, {
         method: 'POST',
+        credentials: 'include',
         headers: this._headers,
         body: JSON.stringify({
           name: data.name,
@@ -71,6 +76,7 @@ class Api {
     deleteCard(_id) {
       return fetch(`${this._baseUrl}/cards/${_id}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
@@ -80,6 +86,7 @@ class Api {
     setLikeCard(_id) {
       return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
         method: 'PUT',
+        credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
@@ -89,6 +96,7 @@ class Api {
     deleteLikeCard(_id) {
       return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
