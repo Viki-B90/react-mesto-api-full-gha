@@ -11,7 +11,7 @@ const handleError = require('./middlewares/handleError');
 
 const allRouters = require('./routes/index');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
@@ -31,6 +31,7 @@ app.use(
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
     allowedHeaders: ['Content-type', 'Authorization'],
     credentials: true,
+    exposedHeaders: ['set-cookie'],
     preflightContinue: false,
     optionsSuccessStatus: 204,
   }),

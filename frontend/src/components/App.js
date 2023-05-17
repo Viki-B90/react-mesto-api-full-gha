@@ -38,7 +38,6 @@ function App() {
   const navigate = useNavigate();
 
   function handleLogin(email, password) {
-    console.log(document.cookie)
     authorize(email, password)
       .then((res) => {
         localStorage.setItem('jwt', res.token);
@@ -75,7 +74,7 @@ function App() {
 
   function handleSignout() {
     setLoggedIn(false);
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     setEmail(null);
     navigate('/signin');
   };
@@ -85,15 +84,14 @@ function App() {
   };
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      tokenCheck(jwt)
+    const token = localStorage.getItem('token');
+    if (token) {
+      tokenCheck(token)
         .then((res) => {
-          if (res) {
+          api.setToken(token);
             setLoggedIn(true);
             setEmail(res.data.email);
             navigate('/');
-          }
         })
         .catch((err) => {
           console.error(`Ошибка: ${err}`);
