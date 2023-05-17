@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Viki-B90/express-mesto-gha.git"
+    "url": "git+https://github.com/Viki-B90/react-mesto-api-full-gha.git"
   },
   "keywords": [],
   "author": "Viktoriya B",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Viki-B90/express-mesto-gha/issues"
+    "url": "https://github.com/Viki-B90/react-mesto-api-full-gha/issues"
   },
-  "homepage": "https://github.com/Viki-B90/express-mesto-gha#readme",
+  "homepage": "https://github.com/Viki-B90/react-mesto-api-full-gha#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "celebrate": "^15.0.1",
