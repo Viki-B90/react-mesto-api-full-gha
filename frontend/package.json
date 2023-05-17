@@ -1,5 +1,5 @@
 {
-  "homepage": "https://github.com/Viki-B90/react-mesto-api-full-gha",
+  "homepage": "https://viki-b90.github.io/react-mesto-api-full-gha",
   "name": "react-mesto-api-full-gha",
   "version": "0.1.0",
   "private": true,
@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^13.5.0",
     "eslint-plugin-react-hooks": "^5.0.0-next-fa4314841-20230502",
     "react": "^18.2.0",
-    "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
