@@ -10,10 +10,6 @@ class Api {
       }
       return Promise.reject (`Ошибка: ${res.status}`);
     }
-
-    setToken(token) {
-      this._headers.authorization = `Bearer ${token}`;
-    }
   
     // Получаем данные пользователя
     getUserProfile() {
@@ -108,7 +104,8 @@ class Api {
   }
   
   export const api = new Api({
-    baseUrl: 'https://api.domainname.stud.viki.nomoredomains.monster',
+    //baseUrl: 'https://api.domainname.stud.viki.nomoredomains.monster',
+    baseUrl: 'http://localhost:3001',
     headers: {
       'Content-Type': 'application/json'
     }

@@ -14,7 +14,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send(users))
+    .then((users) => res.send({ data: users }))
     .catch(next);
 };
 
@@ -24,7 +24,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь по указанному _id не найден'));
       }
-      return res.send(user);
+      return res.send({ data: user });
     })
     .catch(next);
 };
@@ -37,7 +37,7 @@ module.exports.getUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь по указанному _id не найден'));
       }
-      return res.send(user);
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -94,7 +94,7 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .send({ token });
+        .send({ message: 'Успешный вход' });
     })
     .catch(next);
 };
@@ -111,7 +111,7 @@ module.exports.updateProfile = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь по указанному _id не найден'));
       }
-      return res.send(user);
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -134,7 +134,7 @@ module.exports.updateAvatar = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь по указанному _id не найден'));
       }
-      return res.send(user);
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {

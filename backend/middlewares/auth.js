@@ -4,7 +4,7 @@ const { UnauthError } = require('../errors/index-errors');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies;
 
   if (!token) {
     throw new UnauthError('Необходима авторизация');

@@ -14,7 +14,7 @@ import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api';
-import { register, authorize, tokenCheck } from '../utils/auth';
+import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import '../index.css';
 import reportSuccess from '../images/success.svg'
@@ -36,81 +36,6 @@ function App() {
   const [status, setStatus] = useState({ image:'', text:'' });
   const [infoTooltip, setInfoTooltip] = useState(false);
   const navigate = useNavigate();
-
-  function handleLogin(email, password) {
-    authorize(email, password)
-      .then((res) => {
-        localStorage.setItem('jwt', res.token);
-        setLoggedIn(true);
-        setEmail(email);
-        navigate("/");
-      })
-      .catch(() => {
-        setStatus({
-          image: reportError,
-          text: 'Что-то пошло не так! Попробуйте еще раз.'
-        });
-        handleInfoTooltip();
-      });
-  };
-
-  function handleRegister(email, password) {
-    register(email, password)
-      .then(() => {
-        setStatus({
-          image: reportSuccess,
-          text: 'Вы успешно зарегистрировались!'
-        });
-        navigate('/signin');
-      })
-      .catch(() => {
-        setStatus({
-          image: reportError,
-          text: 'Что-то пошло не так! Попробуйте еще раз.'
-        });
-      })
-      .finally(handleInfoTooltip);
-  };
-
-  function handleSignout() {
-    setLoggedIn(false);
-    localStorage.removeItem('token');
-    setEmail(null);
-    navigate('/signin');
-  };
-
-  function handleInfoTooltip() {
-    setInfoTooltip(true);
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      tokenCheck(token)
-        .then((res) => {
-          api.setToken(token);
-            setLoggedIn(true);
-            setEmail(res.data.email);
-            navigate('/');
-        })
-        .catch((err) => {
-          console.error(`Ошибка: ${err}`);
-        });
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    if (loggedIn) {
-      Promise.all([api.getUserProfile(), api.getInitialCards()])
-        .then(([dataUser, dataCard]) => {
-          setCurrentUser(dataUser);
-          setCards(dataCard);
-        })
-        .catch((err) => {
-          console.error(`Ошибка: ${err}`);
-        })
-    }
-  }, [loggedIn]);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -150,6 +75,21 @@ function App() {
       closeAllPopups();
     }
   }
+
+  function handleInfoTooltip() {
+    setInfoTooltip(true);
+  };
+
+  function getInitialData() {
+      Promise.all([api.getUserProfile(), api.getInitialCards()])
+        .then(([dataUser, dataCard]) => {
+          setCurrentUser(dataUser);
+          setCards(dataCard);
+        })
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        })
+    }
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -233,6 +173,67 @@ function App() {
         console.error(`Ошибка: ${err}`);
       }); 
   }
+
+  function handleLogin(data) {
+    auth.authorize(data.email, data.password)
+      .then((data) => {
+        localStorage.setItem('jwt', data.token);
+        checkToken();
+      })
+      .catch(() => {
+        setStatus({
+          image: reportError,
+          text: 'Что-то пошло не так! Попробуйте еще раз.'
+        });
+        handleInfoTooltip();
+      });
+  };
+
+  function handleRegister(data) {
+    auth.register(data.email, data.password)
+      .then((res) => {
+        setStatus({
+          image: reportSuccess,
+          text: 'Вы успешно зарегистрировались!'
+        });
+        navigate("/signin");
+      })
+      .catch(() => {
+        setStatus({
+          image: reportError,
+          text: 'Что-то пошло не так! Попробуйте еще раз.'
+        });
+      })
+      .finally(handleInfoTooltip);
+  };
+
+  function checkToken() {
+    if (localStorage.getItem('jwt')){
+      const jwt = localStorage.getItem('jwt');
+      auth.tokenCheck(jwt)
+        .then((res) => {
+            setLoggedIn(true);
+            setEmail(res.email);
+            getInitialData();
+            navigate("/");
+        })
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        });
+    }
+  }
+
+  function handleSignout() {
+    setLoggedIn(false);
+    localStorage.removeItem('jwt');
+    setEmail(null);
+    navigate("/signin");
+  };
+
+  useEffect(() => {
+    checkToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loggedIn]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

@@ -10,7 +10,8 @@ function PopupWithForm({ name, title, isOpen, onClose, onCloseEsc, onCloseOverla
       document.removeEventListener('keydown', onCloseEsc);
       document.removeEventListener('click', onCloseOverlay);
     }
-  }, [isOpen, onCloseEsc, onCloseOverlay])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
 
   return (
     <section className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`} >
