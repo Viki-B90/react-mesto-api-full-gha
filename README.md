@@ -7,7 +7,7 @@
 
 ## Ссылки на проект
 
-IP-адрес сервера 130.193.37.192
+IP-адрес сервера 158.160.46.13
 
 Frontend https://domainname.students.nomoredomains.monster
 
