@@ -7,7 +7,6 @@ const {
   BadRequestError,
   NotFoundError,
   ConflictError,
-  UnauthError,
 } = require('../errors/index-errors');
 
 const { SALT_ROUNDS } = process.env;
@@ -52,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email } = req.body;
 
-  User.findOne({ email })
+  User.findUserByCredentials({ email })
     .select('+password')
     .then((user) => {
       const token = getJwtToken(user._id);
@@ -65,9 +64,7 @@ module.exports.login = (req, res, next) => {
         })
         .send({ message: 'Успешная авторизация.' });
     })
-    .catch(() => {
-      next(new UnauthError('Неправильные почта или пароль.'));
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
