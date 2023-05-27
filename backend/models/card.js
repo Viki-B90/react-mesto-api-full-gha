@@ -1,21 +1,23 @@
 const mongoose = require('mongoose');
-const { regex } = require('../utils/regex');
+
+// eslint-disable-next-line no-unused-vars
+const validator = require('validator');
+
+const { imgUrlRegExp } = require('../utils/regexp');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Поле "name" должно быть заполнено'],
-    minlength: [2, 'Минимальная длина поля "name" - 2'],
-    maxlength: [30, 'Максимальная длина поля "name" - 30'],
+    required: true,
+    minlength: [2, 'Нужно хотя бы 2 символа.'],
+    maxlength: [30, 'Максимальная длина — 30 символов.'],
   },
   link: {
     type: String,
-    required: [true, 'Поле "link" должно быть заполнено'],
+    required: true,
     validate: {
-      validator(v) {
-        return regex.test(v);
-      },
-      message: 'Недействительный URL картинки',
+      validator: (image) => imgUrlRegExp.test(image),
+      message: 'Неверный url изображения.',
     },
   },
   owner: {

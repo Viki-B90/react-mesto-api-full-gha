@@ -10,7 +10,7 @@ function PopupWithForm({ name, title, isOpen, onClose, onCloseEsc, onCloseOverla
       document.removeEventListener('keydown', onCloseEsc);
       document.removeEventListener('click', onCloseOverlay);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   return (

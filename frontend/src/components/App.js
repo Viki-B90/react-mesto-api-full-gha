@@ -14,7 +14,7 @@ import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api';
-import * as auth from '../utils/auth';
+import { register, authorize, tokenCheck } from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import '../index.css';
 import reportSuccess from '../images/success.svg'
@@ -36,6 +36,83 @@ function App() {
   const [status, setStatus] = useState({ image:'', text:'' });
   const [infoTooltip, setInfoTooltip] = useState(false);
   const navigate = useNavigate();
+
+  function handleLogin(email, password) {
+    authorize(email, password)
+      .then((res) => {
+        localStorage.setItem('jwt', res.token);
+        setLoggedIn(true);
+        setEmail(email);
+        navigate("/");
+      })
+      .catch(() => {
+        setStatus({
+          image: reportError,
+          text: 'Что-то пошло не так! Попробуйте еще раз.'
+        });
+        handleInfoTooltip();
+      });
+  };
+
+  function handleRegister(email, password) {
+    register(email, password)
+      .then(() => {
+        setStatus({
+          image: reportSuccess,
+          text: 'Вы успешно зарегистрировались!'
+        });
+        navigate("/signin");
+      })
+      .catch(() => {
+        setStatus({
+          image: reportError,
+          text: 'Что-то пошло не так! Попробуйте еще раз.'
+        });
+      })
+      .finally(handleInfoTooltip);
+  };
+
+  function handleSignout() {
+    setLoggedIn(false);
+    localStorage.removeItem('jwt');
+    setEmail(null);
+    navigate("/signin");
+  };
+
+  function handleInfoTooltip() {
+    setInfoTooltip(true);
+  };
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      tokenCheck(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.email);
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      Promise.all([api.getUserProfile(), api.getInitialCards()])
+        .then(([dataUser, dataCard]) => {
+          setCurrentUser(dataUser);
+          setCards(dataCard);
+        })
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        })
+    }
+  }, [loggedIn]);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -62,6 +139,7 @@ function App() {
     setImagePopupOpen(false);
     setSelectedCard({});
     setInfoTooltip(false);
+    setCardDelete({});
   }
 
   function handleEscClose(event) {
@@ -76,34 +154,10 @@ function App() {
     }
   }
 
-  function handleInfoTooltip() {
-    setInfoTooltip(true);
-  };
-
-  function getInitialData() {
-      Promise.all([api.getUserProfile(), api.getInitialCards()])
-        .then(([dataUser, dataCard]) => {
-          setCurrentUser(dataUser);
-          setCards(dataCard);
-        })
-        .catch((err) => {
-          console.error(`Ошибка: ${err}`);
-        })
-    }
-
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((user) => user === currentUser._id);
 
-    if (!isLiked) {
-      api.setLikeCard(card._id)
-        .then((newCard) => {
-          setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-        })
-        .catch((err) => {
-          console.error(`Ошибка: ${err}`);
-        });
-      } else {
-      api.deleteLikeCard(card._id)
+      api.changeLikeCardStatus(card, !isLiked)
         .then((newCard) => {
           setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
         })
@@ -111,7 +165,6 @@ function App() {
           console.error(`Ошибка: ${err}`);
         });
       }
-  }
 
   function handleUpdateUser(data) {
     setRenderLoading(true);
@@ -163,7 +216,7 @@ function App() {
     setCardDelete(card)
   }
 
-  function handleCardDelete() {
+  function handleCardDelete(cardDelete) {
     api.deleteCard(cardDelete._id)
       .then(() => {
         setCards((state) => state.filter(c => c._id !== cardDelete._id));
@@ -173,67 +226,6 @@ function App() {
         console.error(`Ошибка: ${err}`);
       }); 
   }
-
-  function handleLogin(data) {
-    auth.authorize(data.email, data.password)
-      .then((data) => {
-        localStorage.setItem('jwt', data.token);
-        checkToken();
-      })
-      .catch(() => {
-        setStatus({
-          image: reportError,
-          text: 'Что-то пошло не так! Попробуйте еще раз.'
-        });
-        handleInfoTooltip();
-      });
-  };
-
-  function handleRegister(data) {
-    auth.register(data.email, data.password)
-      .then((res) => {
-        setStatus({
-          image: reportSuccess,
-          text: 'Вы успешно зарегистрировались!'
-        });
-        navigate("/signin");
-      })
-      .catch(() => {
-        setStatus({
-          image: reportError,
-          text: 'Что-то пошло не так! Попробуйте еще раз.'
-        });
-      })
-      .finally(handleInfoTooltip);
-  };
-
-  function checkToken() {
-    if (localStorage.getItem('jwt')){
-      const jwt = localStorage.getItem('jwt');
-      auth.tokenCheck(jwt)
-        .then((res) => {
-            setLoggedIn(true);
-            setEmail(res.email);
-            getInitialData();
-            navigate("/");
-        })
-        .catch((err) => {
-          console.error(`Ошибка: ${err}`);
-        });
-    }
-  }
-
-  function handleSignout() {
-    setLoggedIn(false);
-    localStorage.removeItem('jwt');
-    setEmail(null);
-    navigate("/signin");
-  };
-
-  useEffect(() => {
-    checkToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loggedIn]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -317,6 +309,8 @@ function App() {
           onCloseOverlay = {handleOverlayClose}
         />
         <ConfirmationPopup 
+          cardDelete={cardDelete}
+
           isOpen={isConfirmationPopupOpen} 
           onClose={closeAllPopups} 
           onDeletePlace={handleCardDelete} 

@@ -1,11 +1,11 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm'
 
-function ConfirmationPopup({ isOpen, onClose, onDeletePlace }) {
+function ConfirmationPopup({ isOpen, onClose, cardDelete, onDeletePlace }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    onDeletePlace();
+    onDeletePlace(cardDelete);
   }
 
   return (

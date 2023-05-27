@@ -5,19 +5,18 @@ const checkResponse = (res) => {
     return Promise.reject (`Ошибка: ${res.status}`);
 }
 
-//const BASE_URL = 'https://api.domainname.stud.viki.nomoredomains.monster';
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'https://api.domainname.stud.viki.nomoredomains.monster';
+//const BASE_URL = 'http://localhost:3001';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
-    mode: 'no-cors',
     credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(email, password),
+    body: JSON.stringify({ email, password }),
   })
   .then(checkResponse);
 }
@@ -25,13 +24,12 @@ export const register = (email, password) => {
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
-    mode: 'no-cors',
     credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(email, password),
+    body: JSON.stringify({ email, password }),
   })
   .then(checkResponse);
 }
@@ -39,7 +37,6 @@ export const authorize = (email, password) => {
 export const tokenCheck = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
-    mode: 'no-cors',
     credentials: 'include',
     headers: {
       Accept: 'application/json',

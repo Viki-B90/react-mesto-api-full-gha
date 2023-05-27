@@ -73,40 +73,33 @@ class Api {
     }
   
     // Удаление карточки
-    deleteCard(_id) {
-      return fetch(`${this._baseUrl}/cards/${_id}`, {
+    deleteCard(card) {
+      return fetch(`${this._baseUrl}/cards/${card}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: this._headers,
       })
       .then(this._checkResponse);
     }
-  
-    // Поставить лайк на карточку
-    setLikeCard(_id) {
-      return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
-        method: 'PUT',
+
+    changeLikeCardStatus(card, isLiked) {
+      const method = isLiked ? 'PUT' : 'DELETE';
+      return fetch(`${this._baseUrl}/cards/${card._id}/likes`,
+      {
+        method: method,
         credentials: 'include',
-        headers: this._headers,
+        headers: this._headers
       })
-      .then(this._checkResponse);
+        .then(this._checkResponse);
     }
   
-    // Снять лайк с карточки
-    deleteLikeCard(_id) {
-      return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: this._headers,
-      })
-      .then(this._checkResponse);
-    }
-  }
+   }
   
   export const api = new Api({
-    //baseUrl: 'https://api.domainname.stud.viki.nomoredomains.monster',
-    baseUrl: 'http://localhost:3001',
+    baseUrl: 'https://api.domainname.stud.viki.nomoredomains.monster',
+    //baseUrl: 'http://localhost:3001',
     headers: {
+      //'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
       'Content-Type': 'application/json'
     }
   });

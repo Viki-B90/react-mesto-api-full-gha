@@ -1,34 +1,73 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { errors } = require('celebrate');
-const limiter = require('./middlewares/rateLimit');
+const rateLimit = require('./middlewares/rateLimit');
+const { validateUserCreate, validateUserLogin } = require('./middlewares/validators');
+const corsOrigins = require('./utils/cors-origins');
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const handleError = require('./middlewares/handleError');
-const allRouters = require('./routes/index');
+
+const auth = require('./middlewares/auth');
+
+const { NotFoundError } = require('./errors/index-errors');
+const handleErrors = require('./middlewares/handleErrors');
+
+const usersRoutes = require('./routes/users');
+const cardsRoutes = require('./routes/cards');
+
+const { PORT = 3000, MONGODB_CONNECT = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
-const { PORT = 3001 } = process.env;
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
-  useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
+app.use(helmet());
+app.use(rateLimit);
+
+app.use(cookieParser());
+
+mongoose.connect(MONGODB_CONNECT);
+
+app.use(cors(corsOrigins));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const { createUser, login } = require('./controllers/users');
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(helmet());
-app.use(limiter);
-app.use(requestLogger);
-app.use('/', allRouters);
+app.post('/signup', validateUserCreate, createUser);
+app.post('/signin', validateUserLogin, login);
+app.get('/signout', (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Выход.' });
+});
+
+app.use(auth);
+
+app.use('/users', usersRoutes);
+app.use('/cards', cardsRoutes);
+
 app.use(errorLogger);
+
 app.use(errors());
-app.use(handleError);
+
+app.use((req, res, next) => {
+  next(new NotFoundError('Такой страницы не существует.'));
+});
+
+app.use(handleErrors);
 
 app.listen(PORT, () => {
-  console.log(`Приложение слушает порт ${PORT}`)
+  // eslint-disable-next-line no-console
+  console.log(`Приложение слушает порт ${PORT}`);
 });
